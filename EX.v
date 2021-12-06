@@ -93,12 +93,12 @@ module EX(
     assign ex_result = alu_result;
 
     //load and store instructions
-    assign stall_en = data_ram_en;   //tell "id" to stall if this instruction is a load or store
+    assign stall_en = data_ram_en & (data_ram_wen == 4'b0);   //tell "id" to stall if this instruction is a load instruction
 
     assign data_sram_en = data_ram_en;
-    assign data_sram_wen = (data_ram_wen == 4'b0) ? 4'b0 : 4'b1;    //4'b0 lw;  4'b1 sw. This formula is easier to read.
-    assign data_sram_addr = alu_result;
-    assign data_sram_wdata = 32'b0;
+    assign data_sram_wen = data_ram_wen;    //4'b0 lw;  4'b1 sw. This formula is easier to read.
+    assign data_sram_addr = ex_result;
+    assign data_sram_wdata = (data_ram_wen == 4'b1111) ? rf_rdata2 : 32'b0;
 
     //
 
